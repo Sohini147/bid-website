@@ -8,16 +8,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
-    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/buyselldb";
-    private static final String JDBC_USER = "postgres";
+    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/justbidlocal";
+    private static final String JDBC_USER = "sohinimallick";
     private static final String JDBC_PASSWORD = "root";
 
     public boolean registerUser(User user) {
+        String createUserTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
+                "id SERIAL PRIMARY KEY, " +
+                "name VARCHAR(100), " +
+                "email VARCHAR(100) UNIQUE, " +
+                "college VARCHAR(150), " +
+                "whatsapp_number VARCHAR(15), " +
+                "password VARCHAR(255));";
+
         String INSERT_USER_SQL = "INSERT INTO users (name, email, college, whatsapp_number, password) VALUES (?, ?, ?, ?, ?)";
         
         try {
             // Load the PostgreSQL JDBC driver
             Class.forName("org.postgresql.Driver");
+            Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+
+            PreparedStatement createUserTableStmt = conn.prepareStatement(createUserTableSQL);
+            createUserTableStmt.executeUpdate();
             
             // Establish the connection
             try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);

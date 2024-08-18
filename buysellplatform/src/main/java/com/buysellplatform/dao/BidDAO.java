@@ -7,8 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class BidDAO {
-    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/buyselldb";
-    private static final String JDBC_USER = "postgres";
+    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/justbidlocal";
+    private static final String JDBC_USER = "sohinimallick";
     private static final String JDBC_PASSWORD = "root";
 
     public boolean placeBid(Bid bid) {

@@ -13,15 +13,31 @@ import java.time.LocalDateTime;
 
 
 public class ProductDAO {
-    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/buyselldb";
-    private static final String JDBC_USER = "postgres";
+    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/justbidlocal";
+    private static final String JDBC_USER = "sohinimallick";
     private static final String JDBC_PASSWORD = "root";
 
     public boolean listProduct(Product product) {
         String INSERT_PRODUCT_SQL = "INSERT INTO products (title, image_url, description, min_bid_price, current_bid_price, auction_end_date, seller_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
+         final String CREATE_PRODUCT_TABLE_SQL = "CREATE TABLE IF NOT EXISTS products ("
+                + "id SERIAL PRIMARY KEY, "
+                + "title VARCHAR(255) NOT NULL, "
+                + "image_url VARCHAR(255), "
+                + "description TEXT, "
+                + "min_bid_price DECIMAL(10, 2) NOT NULL, "
+                + "current_bid_price DECIMAL(10, 2), "
+                + "auction_end_date TIMESTAMP NOT NULL, "
+                + "seller_id INT NOT NULL, "
+                + "FOREIGN KEY (seller_id) REFERENCES sellers(id) ON DELETE CASCADE"
+                + ");";
+
         try {
             Class.forName("org.postgresql.Driver");
+            Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+
+            PreparedStatement createUserTableStmt = conn.prepareStatement(CREATE_PRODUCT_TABLE_SQL);
+            createUserTableStmt.executeUpdate();
             try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
                  PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCT_SQL)) {
             	
